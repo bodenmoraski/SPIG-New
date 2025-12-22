@@ -106,10 +106,11 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
 
 ### 3. Deploy API Service
 1. Click "New" → "GitHub Repo" → Select your repository
-2. In service settings:
-   - **Root Directory**: `apps/api`
-   - **Build Command**: `cd ../.. && pnpm install && pnpm --filter @spig/api build`
-   - **Start Command**: `cd ../.. && pnpm install && pnpm --filter @spig/api prisma generate && pnpm --filter @spig/api start:prod`
+2. **Important**: In service settings, set the **Root Directory**:
+   - If your repo root contains `spig-new/spig-new-main/`: Set to `spig-new/spig-new-main/apps/api`
+   - If your repo root is already `spig-new-main/`: Set to `apps/api`
+3. The `nixpacks.toml` in `apps/api/` will handle build/start commands automatically
+4. Railway should auto-detect Node.js and pnpm from the configuration
 3. Add environment variables:
    - `DATABASE_URL` → Use the variable from your database service (`${{ Postgres.DATABASE_URL }}`)
    - `GOOGLE_CLIENT_ID` → Your Google OAuth client ID
@@ -121,10 +122,11 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
 
 ### 4. Deploy Web Service
 1. Click "New" → "GitHub Repo" → Select the same repository
-2. In service settings:
-   - **Root Directory**: `apps/web`
-   - **Build Command**: `cd ../.. && pnpm install && pnpm --filter @spig/web build`
-   - **Start Command**: `cd ../.. && pnpm install && pnpm --filter @spig/web start`
+2. **Important**: In service settings, set the **Root Directory**:
+   - If your repo root contains `spig-new/spig-new-main/`: Set to `spig-new/spig-new-main/apps/web`
+   - If your repo root is already `spig-new-main/`: Set to `apps/web`
+3. The `nixpacks.toml` in `apps/web/` will handle build/start commands automatically
+4. Railway should auto-detect Node.js and pnpm from the configuration
 3. Add environment variables:
    - `NEXT_PUBLIC_API_URL` → Your API service's public URL (use `${{ Api.RAILWAY_PUBLIC_DOMAIN }}`)
 4. Generate a public domain in Railway settings

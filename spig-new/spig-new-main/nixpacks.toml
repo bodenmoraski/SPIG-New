@@ -1,0 +1,18 @@
+# Nixpacks configuration for Railway
+# This tells Railway where to find the package.json and how to build
+
+[variables]
+NODE_VERSION = "20"
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = ["pnpm install"]
+
+[phases.build]
+cmds = ["pnpm --filter @spig/api build"]
+
+[start]
+cmd = "pnpm --filter @spig/api prisma generate && pnpm --filter @spig/api start:prod"
+

@@ -1,0 +1,18 @@
+# Nixpacks configuration for Railway API service
+# Set Root Directory to: spig-new/spig-new-main/apps/api
+
+[variables]
+NODE_VERSION = "20"
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = ["cd ../.. && pnpm install"]
+
+[phases.build]
+cmds = ["cd ../.. && pnpm --filter @spig/api build"]
+
+[start]
+cmd = "cd ../.. && pnpm --filter @spig/api prisma generate && pnpm --filter @spig/api start:prod"
+

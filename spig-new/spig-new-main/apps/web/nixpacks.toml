@@ -1,0 +1,18 @@
+# Nixpacks configuration for Railway Web service
+# Set Root Directory to: spig-new/spig-new-main/apps/web
+
+[variables]
+NODE_VERSION = "20"
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = ["cd ../.. && pnpm install"]
+
+[phases.build]
+cmds = ["cd ../.. && pnpm --filter @spig/web build"]
+
+[start]
+cmd = "cd ../.. && pnpm --filter @spig/web start"
+
