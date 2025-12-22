@@ -1,7 +1,0 @@
-# This folder is where assignment uploads go in a live, running application
-
-# so ignore everything
-**/*
-
-# except for this file
-!.gitignore

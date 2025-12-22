@@ -1,0 +1,273 @@
+// SPIG Database Schema
+// Matching Phoenix/Ecto schema from spig-main-old
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// USERS & AUTHENTICATION
+// =============================================================================
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.Citext
+  role      Role     @default(STUDENT)
+  name      String
+  avatar    String?
+  createdAt DateTime @default(now()) @map("inserted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  tokens          UserToken[]
+  teacherCourses  Course[]              @relation("TeacherCourses")
+  teacherSections Section[]             @relation("TeacherSections")
+  submissions     Submission[]
+  scores          Score[]               @relation("ScorerScores")
+  memberships     SectionMembership[]
+
+  @@map("users")
+}
+
+enum Role {
+  STUDENT @map("student")
+  TEACHER @map("teacher")
+  ADMIN   @map("admin")
+}
+
+model UserToken {
+  id        Int      @id @default(autoincrement())
+  token     Bytes
+  context   String
+  sentTo    String?  @map("sent_to")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("inserted_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([context, token])
+  @@index([userId])
+  @@map("users_tokens")
+}
+
+// =============================================================================
+// COURSES & SECTIONS
+// =============================================================================
+
+model Course {
+  id        Int      @id @default(autoincrement())
+  name      String
+  teacherId Int      @map("teacher_id")
+  createdAt DateTime @default(now()) @map("inserted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  teacher     User         @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: Cascade)
+  sections    Section[]
+  rubrics     Rubric[]
+  assignments Assignment[]
+
+  @@index([teacherId])
+  @@map("courses")
+}
+
+model Section {
+  id           Int           @id @default(autoincrement())
+  name         String
+  year         Int
+  semester     String
+  archived     Boolean       @default(false)
+  joinableCode String        @unique @map("joinable_code")
+  linkActive   Boolean       @default(false) @map("link_active")
+  status       SectionStatus @default(WAITING)
+  courseId     Int           @map("course_id")
+  teacherId    Int           @map("teacher_id")
+  assignmentId Int?          @map("assignment_id")
+  createdAt    DateTime      @default(now()) @map("inserted_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  course      Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher     User                @relation("TeacherSections", fields: [teacherId], references: [id], onDelete: Cascade)
+  assignment  Assignment?         @relation(fields: [assignmentId], references: [id], onDelete: SetNull)
+  memberships SectionMembership[]
+  groups      Group[]
+  reports     Report[]
+
+  @@index([courseId])
+  @@index([teacherId])
+  @@map("sections")
+}
+
+enum SectionStatus {
+  WAITING            @map("waiting")
+  WRITING            @map("writing")
+  GRADING_INDIVIDUAL @map("grading individually")
+  GRADING_GROUPS     @map("grading in groups")
+  VIEWING_RESULTS    @map("viewing results")
+}
+
+model SectionMembership {
+  id        Int  @id @default(autoincrement())
+  userId    Int  @map("user_id")
+  sectionId Int  @map("section_id")
+  groupId   Int? @map("group_id")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  section Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  group   Group?   @relation(fields: [groupId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, sectionId])
+  @@index([sectionId])
+  @@map("section_memberships")
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  sectionId Int      @map("section_id")
+  createdAt DateTime @default(now()) @map("inserted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  section     Section             @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  memberships SectionMembership[]
+  scores      Score[]
+
+  @@index([sectionId])
+  @@map("groups")
+}
+
+// =============================================================================
+// RUBRICS & CRITERIA
+// =============================================================================
+
+model Rubric {
+  id        Int      @id @default(autoincrement())
+  name      String
+  courseId  Int      @map("course_id")
+  createdAt DateTime @default(now()) @map("inserted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  criteria    Criteria[]
+  assignments Assignment[]
+  scores      Score[]
+  reports     Report[]
+
+  @@index([courseId])
+  @@map("rubrics")
+}
+
+model Criteria {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  points      Float
+  rubricId    Int     @map("rubric_id")
+
+  rubric Rubric @relation(fields: [rubricId], references: [id], onDelete: Cascade)
+
+  @@index([rubricId])
+  @@map("criteria")
+}
+
+// =============================================================================
+// ASSIGNMENTS & SUBMISSIONS
+// =============================================================================
+
+model Assignment {
+  id           Int      @id @default(autoincrement())
+  name         String
+  instructions String?
+  rubricId     Int?     @map("rubric_id")
+  courseId     Int      @map("course_id")
+  createdAt    DateTime @default(now()) @map("inserted_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  rubric      Rubric?      @relation(fields: [rubricId], references: [id], onDelete: SetNull)
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sections    Section[]
+  submissions Submission[]
+  scores      Score[]
+  reports     Report[]
+
+  @@index([courseId])
+  @@index([rubricId])
+  @@map("assignments")
+}
+
+model Submission {
+  id           Int      @id @default(autoincrement())
+  value        String   @db.Text
+  studentId    Int      @map("student_id")
+  assignmentId Int      @map("assignment_id")
+  createdAt    DateTime @default(now()) @map("inserted_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  student    User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  scores     Score[]
+
+  @@unique([studentId, assignmentId])
+  @@index([studentId])
+  @@index([assignmentId])
+  @@map("submissions")
+}
+
+// =============================================================================
+// SCORES & GRADING
+// =============================================================================
+
+model Score {
+  id           Int      @id @default(autoincrement())
+  evaluation   Json     @default("{}")
+  signed       Json     @default("{}")
+  done         Boolean  @default(false)
+  assignmentId Int      @map("assignment_id")
+  submissionId Int      @map("submission_id")
+  scorerId     Int?     @map("scorer_id")
+  groupId      Int?     @map("group_id")
+  rubricId     Int      @map("rubric_id")
+  createdAt    DateTime @default(now()) @map("inserted_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  scorer     User?      @relation("ScorerScores", fields: [scorerId], references: [id], onDelete: SetNull)
+  group      Group?     @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  rubric     Rubric     @relation(fields: [rubricId], references: [id], onDelete: Cascade)
+
+  @@unique([submissionId, assignmentId, rubricId, groupId])
+  @@unique([submissionId, assignmentId, rubricId, scorerId])
+  @@index([submissionId])
+  @@index([scorerId])
+  @@index([groupId])
+  @@index([rubricId])
+  @@map("scores")
+}
+
+// =============================================================================
+// REPORTS
+// =============================================================================
+
+model Report {
+  id            Int      @id @default(autoincrement())
+  assignmentId  Int?     @map("assignment_id")
+  sectionId     Int?     @map("section_id")
+  rubricId      Int?     @map("rubric_id")
+  reportVersion Int      @map("report_version")
+  report        Json
+  createdAt     DateTime @default(now()) @map("inserted_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  assignment Assignment? @relation(fields: [assignmentId], references: [id], onDelete: SetNull)
+  section    Section?    @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  rubric     Rubric?     @relation(fields: [rubricId], references: [id], onDelete: SetNull)
+
+  @@index([assignmentId])
+  @@index([sectionId])
+  @@index([rubricId])
+  @@map("reports")
+}

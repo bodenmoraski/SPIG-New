@@ -1,0 +1,31 @@
+{
+  "name": "spig",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SPIG - Student Peer Interactive Grading Platform",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "db:generate": "pnpm --filter @spig/api prisma generate",
+    "db:push": "pnpm --filter @spig/api prisma db push",
+    "db:migrate": "pnpm --filter @spig/api prisma migrate dev",
+    "db:studio": "pnpm --filter @spig/api prisma studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "prettier": "^3.4.2",
+    "eslint": "^9.17.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.1"
+}
