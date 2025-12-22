@@ -106,11 +106,11 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
 
 ### 3. Deploy API Service
 1. Click "New" → "GitHub Repo" → Select your repository
-2. **Important**: In service settings, set the **Root Directory**:
-   - If your repo root contains `spig-new/spig-new-main/`: Set to `spig-new/spig-new-main/apps/api`
-   - If your repo root is already `spig-new-main/`: Set to `apps/api`
-3. The `nixpacks.toml` in `apps/api/` will handle build/start commands automatically
-4. Railway should auto-detect Node.js and pnpm from the configuration
+2. **Important**: In service settings:
+   - Set **Root Directory** to: `spig-new/spig-new-main` (the monorepo root where the root package.json is)
+   - Railway should auto-detect the Dockerfile at `apps/api/Dockerfile`
+   - If Railway asks for Dockerfile path, set it to: `apps/api/Dockerfile`
+3. Railway will use the Dockerfile to build and deploy automatically
 3. Add environment variables:
    - `DATABASE_URL` → Use the variable from your database service (`${{ Postgres.DATABASE_URL }}`)
    - `GOOGLE_CLIENT_ID` → Your Google OAuth client ID
@@ -122,11 +122,11 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
 
 ### 4. Deploy Web Service
 1. Click "New" → "GitHub Repo" → Select the same repository
-2. **Important**: In service settings, set the **Root Directory**:
-   - If your repo root contains `spig-new/spig-new-main/`: Set to `spig-new/spig-new-main/apps/web`
-   - If your repo root is already `spig-new-main/`: Set to `apps/web`
-3. The `nixpacks.toml` in `apps/web/` will handle build/start commands automatically
-4. Railway should auto-detect Node.js and pnpm from the configuration
+2. **Important**: In service settings:
+   - Set **Root Directory** to: `spig-new/spig-new-main` (the monorepo root where the root package.json is)
+   - Railway should auto-detect the Dockerfile at `apps/web/Dockerfile`
+   - If Railway asks for Dockerfile path, set it to: `apps/web/Dockerfile`
+3. Railway will use the Dockerfile to build and deploy automatically
 3. Add environment variables:
    - `NEXT_PUBLIC_API_URL` → Your API service's public URL (use `${{ Api.RAILWAY_PUBLIC_DOMAIN }}`)
 4. Generate a public domain in Railway settings
@@ -155,11 +155,22 @@ In your Google Cloud Console, add these to authorized redirect URIs:
 **Database:**
 - Railway auto-generates `DATABASE_URL`
 
+### Troubleshooting
+
+**If Railway can't find the Dockerfile:**
+- Make sure the Root Directory is set to `spig-new/spig-new-main` (monorepo root)
+- The Dockerfile Path should be relative to the Root Directory: `apps/api/Dockerfile` or `apps/web/Dockerfile`
+
+**If you prefer not to use Dockerfiles:**
+- Railway should auto-detect Node.js from package.json if you set Root Directory correctly
+- You may need to manually set build/start commands in Railway's settings
+
 ### Notes
 - Railway gives you a free $5/month credit
 - Both services can run on the free tier for demo purposes
 - Use Railway's variable references (e.g., `${{ Postgres.DATABASE_URL }}`) to link services
 - Railway automatically rebuilds on git push if you enable GitHub integration
+- Dockerfiles are provided as a reliable fallback, but Railway's auto-detection should also work
 
 ## License
 
