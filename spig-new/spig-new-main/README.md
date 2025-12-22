@@ -88,6 +88,77 @@ pnpm db:migrate     # Run migrations
 pnpm db:studio      # Open Prisma Studio
 ```
 
+## Deployment to Railway
+
+Railway is the easiest way to deploy SPIG. Follow these steps:
+
+### 1. Create Railway Account
+- Sign up at [railway.app](https://railway.app)
+- Connect your GitHub account
+
+### 2. Create Database Service
+1. Click "New Project" → "New Database" → "PostgreSQL"
+2. Railway will provide a `DATABASE_URL` automatically
+3. **Important**: In the Railway database dashboard, go to "Query" tab and run:
+   ```sql
+   CREATE EXTENSION IF NOT EXISTS citext;
+   ```
+
+### 3. Deploy API Service
+1. Click "New" → "GitHub Repo" → Select your repository
+2. In service settings:
+   - **Root Directory**: `apps/api`
+   - **Build Command**: `cd ../.. && pnpm install && pnpm --filter @spig/api build`
+   - **Start Command**: `cd ../.. && pnpm install && pnpm --filter @spig/api prisma generate && pnpm --filter @spig/api start:prod`
+3. Add environment variables:
+   - `DATABASE_URL` → Use the variable from your database service (`${{ Postgres.DATABASE_URL }}`)
+   - `GOOGLE_CLIENT_ID` → Your Google OAuth client ID
+   - `GOOGLE_CLIENT_SECRET` → Your Google OAuth client secret
+   - `JWT_SECRET` → Generate a random 32+ character string
+   - `PORT` → `3001` (or let Railway assign it)
+   - `FRONTEND_URL` → Will set this after deploying web (use `${{ Web.RAILWAY_PUBLIC_DOMAIN }}`)
+   - `BASE_URL` → Your API's Railway URL (will be generated)
+
+### 4. Deploy Web Service
+1. Click "New" → "GitHub Repo" → Select the same repository
+2. In service settings:
+   - **Root Directory**: `apps/web`
+   - **Build Command**: `cd ../.. && pnpm install && pnpm --filter @spig/web build`
+   - **Start Command**: `cd ../.. && pnpm install && pnpm --filter @spig/web start`
+3. Add environment variables:
+   - `NEXT_PUBLIC_API_URL` → Your API service's public URL (use `${{ Api.RAILWAY_PUBLIC_DOMAIN }}`)
+4. Generate a public domain in Railway settings
+
+### 5. Update API Environment Variables
+After web is deployed, update the API's `FRONTEND_URL` to your web service's public URL.
+
+### 6. Update Google OAuth Settings
+In your Google Cloud Console, add these to authorized redirect URIs:
+- `https://your-api.railway.app/api/auth/google/callback`
+
+### Environment Variables Summary
+
+**API Service:**
+- `DATABASE_URL` (from PostgreSQL service)
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `JWT_SECRET` (random 32+ chars)
+- `FRONTEND_URL` (web service URL)
+- `BASE_URL` (API service URL)
+- `PORT` (optional, defaults to 3001)
+
+**Web Service:**
+- `NEXT_PUBLIC_API_URL` (API service URL)
+
+**Database:**
+- Railway auto-generates `DATABASE_URL`
+
+### Notes
+- Railway gives you a free $5/month credit
+- Both services can run on the free tier for demo purposes
+- Use Railway's variable references (e.g., `${{ Postgres.DATABASE_URL }}`) to link services
+- Railway automatically rebuilds on git push if you enable GitHub integration
+
 ## License
 
 Private - All rights reserved
