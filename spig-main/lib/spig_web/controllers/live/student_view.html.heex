@@ -1,0 +1,154 @@
+<div class="sectionview">
+  <%= if @section.assignment do %>
+    <div class="infobar">
+      <p>
+        <%= @section.assignment.name %>
+        <%= if @is_teacher do %>
+        - grading mode
+        <a href={~p"/section/#{@section.id}?student_view=1"}>(switch to student view)</a>
+        <% end %>
+      </p>
+    </div>
+    <%= case @section.status do %>
+      <% "writing" -> %>
+        <%= if not @submitted do %>
+          <div class="splitview">
+            <%= if @pdf_exists do %>
+              <iframe
+                style="width: 40%; height: 90vh;"
+                src={"/uploads/instructions_#{@section.assignment.id}.pdf"}
+              />
+            <% end %>
+            <LiveMonacoEditor.code_editor
+              style={if @pdf_exists, do: "width: 60%", else: "width: 100%"}
+              value={"// type out your submission below!#{"\n\n\n"}"}
+              opts={
+                Map.merge(
+                  LiveMonacoEditor.default_opts(),
+                  %{
+                    "language" => "java",
+                    "automaticLayout" => true,
+                    "autoIndent" => "full",
+                    "formatOnPaste" => true,
+                    "formatOnType" => true,
+                    "tabSize" => 2,
+                    "detectIndentation" => true,
+                    "insertSpaces" => true
+                  }
+                )
+              }
+            />
+          </div>
+          <button
+            style="position: fixed; right: 1rem; bottom: 1rem"
+            onclick="document.getElementById('confirmSubmit').showModal()"
+          >
+            Submit &rarr;
+          </button>
+          <dialog id="confirmSubmit">
+            <h1>Are you sure?</h1>
+            <p>Once you submit, there's no going back!</p>
+            <button class="secondary" onclick="document.getElementById('confirmSubmit').close()">
+              Cancel
+            </button>
+            <button onclick="window.codeEditor.hook.pushEvent('submit', window.codeEditor.editor.getValue()); this.disabled = true">
+              Submit!
+            </button>
+          </dialog>
+        <% else %>
+          <h1>✅ Submitted!</h1>
+        <% end %>
+      <% x when x in ["grading individually", "grading in groups"] -> %>
+        <%= if @reviewing == nil do %>
+          <h2>Nothing to review.</h2>
+        <% else %>
+          <div class="splitview">
+            <form class="rubricSideview" id="evaluationForm" data-status={@section.status}>
+              <%= if @section.assignment.rubric do %>
+                <div style="display: flex; align-items: center">
+                  <h2><%= @section.assignment.rubric.name %></h2>
+                  <%!-- maybe one day this can be a good-looking live score indicator --%>
+                  <%!-- <div class="spacer"></div>
+                  <h2>0 / 9</h2> --%>
+                </div>
+                <table>
+                <tbody>
+                  <%= for criteria <- @section.assignment.rubric.criteria do %>
+                  <tr>
+                    <td><div class="criteria">
+                    <p><%= criteria.name %> <span
+                      style={"color: var(#{if criteria.points >= 0, do: "--accent", else: "--error"})"}>
+                      <%= criteria.points %>pts
+                    </span></p>
+                    <p class="smol"><%= criteria.description %></p>
+                    </div></td>
+                    <td><input name={"c-#{criteria.id}"} type="checkbox" /></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+                </table>
+                <%= if @section.status == "grading in groups" do %>
+                  <p>You're in a group with <%= @groupMembers %>. All members of the group must reach a consensus before submitting this score.</p>
+                  <button
+                    id="groupSubmit"
+                    class="evaluation-button"
+                    type="submit"
+                    disabled={@score.signed[@current_user.id] == true}
+                    style={"--progress: #{Enum.count(@score.signed, fn {_k, v} -> v end) / Enum.count(@group.students) * 100}%"}
+                  >
+                    Lock in score (<%= Enum.count(@score.signed, fn {_key, value} -> value end) %> / <%= Enum.count(@group.students) %>)
+                  </button>
+                <% else %>
+                <button id="evalSubmit" type="submit">
+                  Submit &rarr;
+                </button>
+                <% end %>
+              <% else %>
+                <h2>(no rubric)</h2>
+              <% end %>
+            </form>
+            <%!-- note here, that the value attribute will be overwritten by a hook --%>
+            <LiveMonacoEditor.code_editor
+              style="width: 70%"
+              value={@reviewing.value}
+              opts={
+                Map.merge(
+                  LiveMonacoEditor.default_opts(),
+                  %{"language" => "java", "automaticLayout" => true}
+                )
+              }
+            />
+          </div>
+        <% end %>
+      <% "viewing results" -> %>
+        <div class="center">
+          <%= if @results do %>
+            <h1 class="confettitext" style="font-weight: normal">Results</h1>
+            <h1 style="margin: 0; font-size: 4rem"><%= @results["weighted_average"] %></h1>
+            <span style="margin-top: 0; margin-bottom: 1rem">(weighted average)</span>
+            <div>
+              <p><strong>Teacher Score:</strong> <%= @results["teacher_only"] %></p>
+              <p><strong>Score From Classmates:</strong> <%= @results["students_only"] %></p>
+              <p><strong>Average Group Score:</strong> <%= @results["groups_only"] %></p>
+              <p><strong>Highest Received:</strong> <%= @results["highest"] %></p>
+              <p><strong>Lowest Received:</strong> <%= @results["lowest"] %></p>
+              <p><strong>Median Score Received:</strong> <%= @results["median"] %></p>
+              <p><strong>Total Average Received:</strong> <%= @results["total_average"] %></p>
+              <p><strong>Weighted Average Received:</strong> <%= @results["weighted_average"] %></p>
+            </div>
+          <% else %>
+            <h1 style="margin-bottom: 0">You're done!</h1>
+            <p>Congratulations! Your teacher may choose to post results here soon.</p>
+          <% end %>
+        </div>
+      <% _ -> %>
+        <div class="center">
+          <h1>Waiting...</h1>
+        </div>
+    <% end %>
+  <% else %>
+    <div class="center">
+      <h1>Nothing assigned :)</h1>
+    </div>
+  <% end %>
+</div>

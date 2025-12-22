@@ -1,0 +1,17 @@
+<main>
+  <h1>Access Denied</h1>
+  <p>
+    It seems like you used an invalid email
+    address, <b><%= @invalid_email %></b>, to log into Spig.
+  </p>
+  <p>
+    Only these email domains are permitted to sign up:
+  </p>
+  <ul>
+    <%= for domain <- Application.get_env(:spig, Spig.Accounts)[:trusted_hd] do %>
+      <li>@<%= domain %></li>
+    <% end %>
+  </ul>
+
+  <.link href="/">Try Again</.link>
+</main>

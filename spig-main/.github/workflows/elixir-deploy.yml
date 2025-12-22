@@ -1,0 +1,32 @@
+name: Elixir Deployment
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+env:
+  MIX_ENV: prod
+
+jobs:
+  deploy:
+    name: Trigger deployment
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SPIG_LOGIN_SSH_KEY }}
+      - name: Ship it
+        shell: bash
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SPIG_LOGIN }} "/bin/bash ./pull_and_update.sh"
