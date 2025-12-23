@@ -108,8 +108,7 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
 1. Click "New" → "GitHub Repo" → Select your repository
 2. **Important**: In service settings:
    - Set **Root Directory** to: `spig-new/spig-new-main` (the monorepo root where the root package.json is)
-   - Railway should auto-detect the Dockerfile at `apps/api/Dockerfile`
-   - If Railway asks for Dockerfile path, set it to: `apps/api/Dockerfile`
+   - Set **Dockerfile Path** to: `Dockerfile.api` (or just `Dockerfile.api` if Railway shows it's looking in the root)
 3. Railway will use the Dockerfile to build and deploy automatically
 3. Add environment variables:
    - `DATABASE_URL` → Use the variable from your database service (`${{ Postgres.DATABASE_URL }}`)
@@ -124,8 +123,7 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
 1. Click "New" → "GitHub Repo" → Select the same repository
 2. **Important**: In service settings:
    - Set **Root Directory** to: `spig-new/spig-new-main` (the monorepo root where the root package.json is)
-   - Railway should auto-detect the Dockerfile at `apps/web/Dockerfile`
-   - If Railway asks for Dockerfile path, set it to: `apps/web/Dockerfile`
+   - Set **Dockerfile Path** to: `Dockerfile.web` (or just `Dockerfile.web` if Railway shows it's looking in the root)
 3. Railway will use the Dockerfile to build and deploy automatically
 3. Add environment variables:
    - `NEXT_PUBLIC_API_URL` → Your API service's public URL (use `${{ Api.RAILWAY_PUBLIC_DOMAIN }}`)
@@ -159,11 +157,14 @@ In your Google Cloud Console, add these to authorized redirect URIs:
 
 **If Railway can't find the Dockerfile:**
 - Make sure the Root Directory is set to `spig-new/spig-new-main` (monorepo root)
-- The Dockerfile Path should be relative to the Root Directory: `apps/api/Dockerfile` or `apps/web/Dockerfile`
+- The Dockerfile Path should be: `Dockerfile.api` for API or `Dockerfile.web` for Web
+- These Dockerfiles are in the monorepo root for easier Railway detection
 
 **If you prefer not to use Dockerfiles:**
 - Railway should auto-detect Node.js from package.json if you set Root Directory correctly
-- You may need to manually set build/start commands in Railway's settings
+- You may need to manually set build/start commands in Railway's settings:
+  - Build: `pnpm install && pnpm --filter @spig/api build` (or `@spig/web`)
+  - Start: `pnpm --filter @spig/api start:prod` (or `pnpm --filter @spig/web start`)
 
 ### Notes
 - Railway gives you a free $5/month credit
