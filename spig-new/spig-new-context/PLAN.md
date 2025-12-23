@@ -6,6 +6,7 @@
 
 ## Table of Contents
 
+
 1. [Tech Stack Selection](#tech-stack-selection)
 2. [Phoenix ↔ Node.js Pattern Mapping](#phoenix--nodejs-pattern-mapping)
 3. [Project Structure](#project-structure)
