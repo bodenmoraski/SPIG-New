@@ -93,13 +93,21 @@ export class AuthService {
 
   /**
    * Cookie configuration matching Phoenix behavior
+   * For cross-origin requests (different domains), we need sameSite: 'none' with secure: true
    */
   getCookieConfig() {
     const isProduction = this.configService.get('NODE_ENV') === 'production';
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+    const baseUrl = this.configService.get<string>('BASE_URL');
+    
+    // Check if frontend and backend are on different domains (cross-origin)
+    const isCrossOrigin = frontendUrl && baseUrl && 
+      new URL(frontendUrl).hostname !== new URL(baseUrl).hostname;
+    
     return {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax' as const,
+      secure: true, // Always secure in production/cross-origin scenarios
+      sameSite: (isCrossOrigin || isProduction ? 'none' : 'lax') as const,
       maxAge: 60 * 24 * 60 * 60 * 1000, // 60 days in milliseconds
       path: '/',
     };
