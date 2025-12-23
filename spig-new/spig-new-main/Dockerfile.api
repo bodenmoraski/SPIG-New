@@ -38,7 +38,7 @@ RUN pnpm --filter @spig/api build
 # Production stage
 FROM node:20-alpine AS production
 
-RUN npm install -g pnpm@9.15.1
+RUN npm install -g pnpm@9.15.1 prisma@6.1.0
 
 WORKDIR /app
 
@@ -50,15 +50,16 @@ COPY apps/api/package.json ./apps/api/package.json
 # Install production dependencies only
 RUN pnpm install --frozen-lockfile --prod
 
-# Copy built application and generated Prisma client
+# Copy built application and Prisma schema
 COPY --from=base /app/apps/api/dist ./apps/api/dist
 COPY --from=base /app/apps/api/prisma ./apps/api/prisma
-# Copy generated Prisma client (generated files are in node_modules/.prisma)
-COPY --from=base /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=base /app/packages/shared-types/dist ./packages/shared-types/dist
 COPY --from=base /app/packages/shared-types/package.json ./packages/shared-types/package.json
 
 WORKDIR /app/apps/api
+
+# Generate Prisma client in production stage (after dependencies are installed)
+RUN prisma generate
 
 # Expose port
 EXPOSE 3001
