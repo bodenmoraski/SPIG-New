@@ -42,8 +42,15 @@ export function GoogleLoginButton() {
   const initializeGoogleSignIn = () => {
     if (!window.google || !buttonRef.current) return;
 
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      console.error('NEXT_PUBLIC_GOOGLE_CLIENT_ID is not set');
+      setError('Google Sign-In is not configured. Please contact support.');
+      return;
+    }
+
     window.google.accounts.id.initialize({
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      client_id: clientId,
       callback: handleCredentialResponse,
       auto_select: false,
       cancel_on_tap_outside: true,
