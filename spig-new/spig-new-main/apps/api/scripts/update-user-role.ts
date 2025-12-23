@@ -5,25 +5,38 @@ const prisma = new PrismaClient();
 async function updateUserRole(email: string, role: Role) {
   try {
     // Find user by email (case-insensitive)
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      console.error(`User with email ${email} not found.`);
-      process.exit(1);
+      // Create user if they don't exist
+      // Extract name from email (part before @) and capitalize
+      const nameFromEmail = email.split('@')[0].split('.').map(
+        part => part.charAt(0).toUpperCase() + part.slice(1)
+      ).join(' ');
+      
+      console.log(`User not found. Creating new user: ${email}`);
+      user = await prisma.user.create({
+        data: {
+          email,
+          name: nameFromEmail,
+          role,
+        },
+      });
+      console.log(`✅ Successfully created ${user.email} with role: ${user.role}`);
+    } else {
+      console.log(`Found user: ${user.name} (${user.email})`);
+      console.log(`Current role: ${user.role}`);
+
+      // Update user role
+      user = await prisma.user.update({
+        where: { email },
+        data: { role },
+      });
+
+      console.log(`✅ Successfully updated ${user.email} to role: ${user.role}`);
     }
-
-    console.log(`Found user: ${user.name} (${user.email})`);
-    console.log(`Current role: ${user.role}`);
-
-    // Update user role
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { role },
-    });
-
-    console.log(`✅ Successfully updated ${updatedUser.email} to role: ${updatedUser.role}`);
   } catch (error) {
     console.error('Error updating user role:', error);
     process.exit(1);
