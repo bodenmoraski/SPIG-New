@@ -104,10 +104,12 @@ export class AuthService {
     const isCrossOrigin = frontendUrl && baseUrl && 
       new URL(frontendUrl).hostname !== new URL(baseUrl).hostname;
     
+    const sameSite: 'none' | 'lax' = (isCrossOrigin || isProduction ? 'none' : 'lax');
+    
     return {
       httpOnly: true,
       secure: true, // Always secure in production/cross-origin scenarios
-      sameSite: (isCrossOrigin || isProduction ? 'none' : 'lax') as const,
+      sameSite,
       maxAge: 60 * 24 * 60 * 60 * 1000, // 60 days in milliseconds
       path: '/',
     };
