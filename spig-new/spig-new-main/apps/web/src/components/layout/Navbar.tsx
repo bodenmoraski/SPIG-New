@@ -42,7 +42,7 @@ export function Navbar({ user }: NavbarProps) {
               <span className="text-xl font-bold text-text group-hover:text-accent transition-colors">
                 SPIG
               </span>
-            </Link>
+          </Link>
 
             {user.role !== 'STUDENT' ? (
               <Link
@@ -52,12 +52,12 @@ export function Navbar({ user }: NavbarProps) {
                 Courses
               </Link>
             ) : (
-              <Link
-                href="/section"
+            <Link
+              href="/section"
                 className="px-3 py-2 text-sm font-medium text-text-muted hover:text-text hover:bg-item-bg rounded-md transition-colors"
-              >
-                My Sections
-              </Link>
+            >
+              My Sections
+            </Link>
             )}
           </div>
 

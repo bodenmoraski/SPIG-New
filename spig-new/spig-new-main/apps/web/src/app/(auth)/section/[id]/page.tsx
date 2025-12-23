@@ -392,7 +392,7 @@ export default function StudentSectionPage() {
             <div className="empty-state-icon">⏳</div>
             <div className="empty-state-title">Waiting for Activity</div>
             <div className="empty-state-description">
-              Your teacher hasn't started an activity yet. Please wait for instructions.
+            Your teacher hasn't started an activity yet. Please wait for instructions.
             </div>
           </div>
         </div>
@@ -410,7 +410,7 @@ export default function StudentSectionPage() {
               <div className="empty-state-icon">✓</div>
               <div className="empty-state-title text-success">Submitted!</div>
               <div className="empty-state-description">
-                Your response has been submitted. Please wait for the grading phase to begin.
+              Your response has been submitted. Please wait for the grading phase to begin.
               </div>
             </div>
           </div>
@@ -481,7 +481,7 @@ export default function StudentSectionPage() {
               <div className="empty-state-icon">🎉</div>
               <div className="empty-state-title">All Done!</div>
               <div className="empty-state-description">
-                There are no more submissions to review. Please wait for the next phase.
+              There are no more submissions to review. Please wait for the next phase.
               </div>
             </div>
           </div>
@@ -502,7 +502,7 @@ export default function StudentSectionPage() {
                 <p className="text-sm text-text-muted">
                   <span className="font-medium text-text">Group grading:</span>{' '}
                   You're working with {formatGroupMembers()}
-                </p>
+              </p>
               </div>
             )}
           </div>
@@ -565,10 +565,10 @@ export default function StudentSectionPage() {
                     </span>
                   </div>
                   <div className="progress-bar bg-background">
-                    <div
-                      className="progress-bar-fill"
-                      style={{ width: `${(getSignedCount() / groupMembers.length) * 100}%` }}
-                    />
+                  <div
+                    className="progress-bar-fill"
+                    style={{ width: `${(getSignedCount() / groupMembers.length) * 100}%` }}
+                  />
                   </div>
                 </div>
                 <button

@@ -146,7 +146,7 @@ export function InviteLinkDialog({
             </h3>
             {students.length === 0 ? (
               <div className="text-center py-6">
-                <p className="text-text-muted text-sm">No students have joined yet.</p>
+              <p className="text-text-muted text-sm">No students have joined yet.</p>
                 <p className="text-text-subtle text-xs mt-1">Share the invite link above to get started.</p>
               </div>
             ) : (

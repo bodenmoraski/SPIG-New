@@ -185,7 +185,7 @@ export default function CoursePage() {
           </svg>
           <span className="text-text">{course.name}</span>
         </nav>
-        <h1 className="text-3xl font-bold">{course.name}</h1>
+          <h1 className="text-3xl font-bold">{course.name}</h1>
       </div>
 
       {/* Sections */}
@@ -215,23 +215,23 @@ export default function CoursePage() {
             {course.sections.map((section) => {
               const statusConfig = STATUS_CONFIG[section.status] || STATUS_CONFIG.WAITING;
               return (
-                <Link
-                  key={section.id}
-                  href={`/course/${courseId}/section/${section.id}`}
+              <Link
+                key={section.id}
+                href={`/course/${courseId}/section/${section.id}`}
                   className="card card-hover group"
-                >
+              >
                   <div className="flex items-start justify-between mb-3 gap-3">
                     <h3 className="text-lg font-semibold group-hover:text-accent transition-colors flex-1">
-                      {section.name}
-                    </h3>
-                    <span
+                    {section.name}
+                  </h3>
+                  <span
                       className={`status-badge ${statusConfig.bgColor} ${statusConfig.color} border flex-shrink-0`}
-                    >
+                  >
                       <span className="text-xs">{statusConfig.icon}</span>
                       <span className="hidden sm:inline">{statusConfig.label}</span>
                       <span className="sm:hidden">{statusConfig.label.split(' ')[0]}</span>
-                    </span>
-                  </div>
+                  </span>
+                </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-text-muted">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,11 +248,11 @@ export default function CoursePage() {
                     <div className="flex items-center gap-2 text-xs">
                       <span className={`w-1.5 h-1.5 rounded-full ${section.linkActive ? 'bg-success' : 'bg-text-subtle'}`} />
                       <span className="text-text-subtle">
-                        Join link {section.linkActive ? 'active' : 'inactive'}
+                    Join link {section.linkActive ? 'active' : 'inactive'}
                       </span>
                     </div>
-                  </div>
-                </Link>
+                </div>
+              </Link>
               );
             })}
           </div>
@@ -287,14 +287,14 @@ export default function CoursePage() {
               const criteriaCount = rubric._count?.criteria || rubric.criteria?.length || 0;
               const totalPoints = rubric.criteria?.reduce((sum, c) => sum + c.points, 0) || 0;
               return (
-                <Link
-                  key={rubric.id}
-                  href={`/course/${courseId}/rubric/${rubric.id}`}
+              <Link
+                key={rubric.id}
+                href={`/course/${courseId}/rubric/${rubric.id}`}
                   className="card card-hover group"
-                >
+              >
                   <h3 className="text-lg font-semibold group-hover:text-accent transition-colors mb-3">
-                    {rubric.name}
-                  </h3>
+                  {rubric.name}
+                </h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-text-muted">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,7 +308,7 @@ export default function CoursePage() {
                       </div>
                     )}
                   </div>
-                </Link>
+              </Link>
               );
             })}
           </div>

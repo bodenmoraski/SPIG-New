@@ -176,7 +176,7 @@ export default function RubricEditorPage() {
           <span className="text-text">Rubric</span>
         </nav>
         <div className="flex items-start justify-between gap-4">
-          <div>
+      <div>
             <h1 className="text-3xl font-bold mb-2">{rubric.name}</h1>
             <div className="flex items-center gap-4 text-sm text-text-muted">
               <span>{rubric.criteria.length} criteria</span>
@@ -223,71 +223,71 @@ export default function RubricEditorPage() {
                 <h2 className="text-lg font-semibold mb-3 text-text">Positive Points</h2>
                 <div className="space-y-2">
                   {positiveCriteria.map((criteria) => (
-                    <div
-                      key={criteria.id}
+              <div
+                key={criteria.id}
                       className="card bg-background border-border-subtle hover:border-border transition-all"
-                    >
-                      {editingId === criteria.id ? (
-                        // Edit mode
+              >
+                {editingId === criteria.id ? (
+                  // Edit mode
                         <div className="space-y-4">
                           <div>
                             <label className="block text-xs font-medium text-text-muted mb-1.5">
                               Criteria Name
                             </label>
-                            <input
-                              type="text"
-                              value={editName}
-                              onChange={(e) => setEditName(e.target.value)}
-                              className="input"
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="input"
                               placeholder="e.g., Correct output"
                               autoFocus
-                            />
+                    />
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-text-muted mb-1.5">
                               Description <span className="text-text-subtle">(optional)</span>
                             </label>
-                            <input
-                              type="text"
-                              value={editDescription}
-                              onChange={(e) => setEditDescription(e.target.value)}
-                              className="input"
+                    <input
+                      type="text"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="input"
                               placeholder="Additional details..."
-                            />
+                    />
                           </div>
                           <div className="flex items-end gap-4">
                             <div className="flex-1">
                               <label className="block text-xs font-medium text-text-muted mb-1.5">
                                 Points
                               </label>
-                              <input
-                                type="number"
-                                value={editPoints}
-                                onChange={(e) => setEditPoints(Number(e.target.value))}
+                      <input
+                        type="number"
+                        value={editPoints}
+                        onChange={(e) => setEditPoints(Number(e.target.value))}
                                 className="input"
-                                step="0.5"
+                        step="0.5"
                                 min="-100"
                                 max="100"
-                              />
-                            </div>
-                            <div className="flex gap-2">
+                      />
+                    </div>
+                    <div className="flex gap-2">
                               <button
                                 onClick={handleSaveEdit}
                                 className="btn btn-primary btn-sm"
                               >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => setEditingId(null)}
-                                className="btn btn-secondary btn-sm"
-                              >
-                                Cancel
-                              </button>
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="btn btn-secondary btn-sm"
+                      >
+                        Cancel
+                      </button>
                             </div>
-                          </div>
-                        </div>
-                      ) : (
-                        // View mode
+                    </div>
+                  </div>
+                ) : (
+                  // View mode
                         <div className="flex items-start gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-3 mb-1">
@@ -324,7 +324,7 @@ export default function RubricEditorPage() {
                                 </div>
                               </div>
                             </div>
-                            {criteria.description && (
+                      {criteria.description && (
                               <p className="text-sm text-text-muted mt-1">{criteria.description}</p>
                             )}
                           </div>
@@ -388,8 +388,8 @@ export default function RubricEditorPage() {
                                 min="-100"
                                 max="100"
                               />
-                            </div>
-                            <div className="flex gap-2">
+                    </div>
+                    <div className="flex gap-2">
                               <button
                                 onClick={handleSaveEdit}
                                 className="btn btn-primary btn-sm"
@@ -416,27 +416,27 @@ export default function RubricEditorPage() {
                                   {criteria.points}
                                 </span>
                                 <div className="flex gap-1">
-                                  <button
-                                    onClick={() => handleStartEdit(criteria)}
+                      <button
+                        onClick={() => handleStartEdit(criteria)}
                                     className="text-text-muted hover:text-accent transition-colors p-1.5 rounded hover:bg-item-hover"
-                                    title="Edit"
+                        title="Edit"
                                     aria-label="Edit criteria"
-                                  >
+                      >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteCriteria(criteria.id)}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCriteria(criteria.id)}
                                     className="text-text-muted hover:text-error transition-colors p-1.5 rounded hover:bg-item-hover"
-                                    title="Delete"
+                        title="Delete"
                                     aria-label="Delete criteria"
-                                  >
+                      >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
-                                  </button>
-                                </div>
+                      </button>
+                    </div>
                               </div>
                             </div>
                             {criteria.description && (
@@ -444,10 +444,10 @@ export default function RubricEditorPage() {
                             )}
                           </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                )}
+              </div>
+            ))}
+          </div>
               </div>
             )}
           </>
@@ -468,56 +468,56 @@ export default function RubricEditorPage() {
                 <label htmlFor="new-name" className="block text-xs font-medium text-text-muted mb-1.5">
                   Criteria Name <span className="text-text-subtle">*</span>
                 </label>
-                <input
+              <input
                   id="new-name"
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="input"
-                  placeholder="e.g., Correct output"
-                  required
-                />
-              </div>
-              <div>
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                className="input"
+                placeholder="e.g., Correct output"
+                required
+              />
+            </div>
+            <div>
                 <label htmlFor="new-description" className="block text-xs font-medium text-text-muted mb-1.5">
                   Description
                 </label>
-                <input
+              <input
                   id="new-description"
-                  type="text"
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  className="input"
+                type="text"
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                className="input"
                   placeholder="Optional details..."
-                />
-              </div>
-              <div>
+              />
+            </div>
+            <div>
                 <label htmlFor="new-points" className="block text-xs font-medium text-text-muted mb-1.5">
                   Points <span className="text-text-subtle">*</span>
                 </label>
-                <div className="flex gap-2">
-                  <input
+              <div className="flex gap-2">
+                <input
                     id="new-points"
-                    type="number"
-                    value={newPoints}
-                    onChange={(e) => setNewPoints(Number(e.target.value))}
-                    className="input"
-                    step="0.5"
+                  type="number"
+                  value={newPoints}
+                  onChange={(e) => setNewPoints(Number(e.target.value))}
+                  className="input"
+                  step="0.5"
                     min="-100"
                     max="100"
-                    required
-                  />
-                  <button
-                    type="submit"
+                  required
+                />
+                <button
+                  type="submit"
                     className="btn btn-primary whitespace-nowrap"
-                    disabled={isAdding || !newName.trim()}
-                  >
-                    {isAdding ? 'Adding...' : 'Add'}
-                  </button>
-                </div>
+                  disabled={isAdding || !newName.trim()}
+                >
+                  {isAdding ? 'Adding...' : 'Add'}
+                </button>
               </div>
             </div>
-          </form>
+          </div>
+        </form>
         </div>
       </div>
     </div>

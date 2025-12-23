@@ -85,44 +85,44 @@ export function CreateAssignmentDialog({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
+            <div>
             <label htmlFor="name" className="block text-sm font-medium text-text mb-2">
-              Assignment Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="input"
-              placeholder="e.g., FRQ 1 - Array Processing"
-              required
-              minLength={1}
-              maxLength={100}
-              autoFocus
-            />
-          </div>
+                Assignment Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="input"
+                placeholder="e.g., FRQ 1 - Array Processing"
+                required
+                minLength={1}
+                maxLength={100}
+                autoFocus
+              />
+            </div>
 
-          <div>
+            <div>
             <label htmlFor="rubricId" className="block text-sm font-medium text-text mb-2">
               Rubric <span className="text-text-subtle font-normal">(optional)</span>
-            </label>
-            <select
-              id="rubricId"
-              value={rubricId}
-              onChange={(e) => setRubricId(e.target.value)}
-              className="input"
-            >
-              <option value="">No rubric selected</option>
-              {rubrics.map((rubric) => (
-                <option key={rubric.id} value={rubric.id}>
-                  {rubric.name}
-                </option>
-              ))}
-            </select>
+              </label>
+              <select
+                id="rubricId"
+                value={rubricId}
+                onChange={(e) => setRubricId(e.target.value)}
+                className="input"
+              >
+                <option value="">No rubric selected</option>
+                {rubrics.map((rubric) => (
+                  <option key={rubric.id} value={rubric.id}>
+                    {rubric.name}
+                  </option>
+                ))}
+              </select>
             <p className="text-xs text-text-muted mt-1.5">
-              You can add a PDF and assign a rubric later.
-            </p>
+                You can add a PDF and assign a rubric later.
+              </p>
           </div>
 
           {error && (

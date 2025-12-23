@@ -62,22 +62,22 @@ export default function LoginPage() {
               Sign in to continue to your account
             </p>
           </div>
-          
-          <GoogleLoginButton />
+        
+        <GoogleLoginButton />
 
           <div className="mt-8 pt-6 border-t border-border-subtle">
             <p className="text-xs text-text-muted text-center leading-relaxed">
               By signing in, you agree to use your school Google account for educational purposes.
-            </p>
+        </p>
           </div>
-        </div>
+      </div>
 
         {/* Footer */}
         <footer className="mt-8 text-center">
           <p className="text-xs text-text-subtle">
-            &copy; {new Date().getFullYear()} SPIG Platform
+        &copy; {new Date().getFullYear()} SPIG Platform
           </p>
-        </footer>
+      </footer>
       </div>
     </div>
   );

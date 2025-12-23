@@ -85,64 +85,64 @@ export function CreateSectionDialog({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
+            <div>
             <label htmlFor="name" className="block text-sm font-medium text-text mb-2">
-              Section Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="input"
-              placeholder="e.g., Period 1"
-              required
-              minLength={1}
-              maxLength={100}
-              autoFocus
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="semester" className="block text-sm font-medium text-text mb-2">
-                Semester
-              </label>
-              <select
-                id="semester"
-                value={semester}
-                onChange={(e) => setSemester(e.target.value)}
-                className="input"
-                required
-              >
-                <option value="Fall">Fall</option>
-                <option value="Spring">Spring</option>
-                <option value="Summer">Summer</option>
-                <option value="Winter">Winter</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="year" className="block text-sm font-medium text-text mb-2">
-                Year
+                Section Name
               </label>
               <input
-                id="year"
-                type="number"
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="input"
-                min={2020}
-                max={2100}
+                placeholder="e.g., Period 1"
                 required
+                minLength={1}
+                maxLength={100}
+                autoFocus
               />
             </div>
-          </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+              <label htmlFor="semester" className="block text-sm font-medium text-text mb-2">
+                  Semester
+                </label>
+                <select
+                  id="semester"
+                  value={semester}
+                  onChange={(e) => setSemester(e.target.value)}
+                  className="input"
+                  required
+                >
+                  <option value="Fall">Fall</option>
+                  <option value="Spring">Spring</option>
+                  <option value="Summer">Summer</option>
+                  <option value="Winter">Winter</option>
+                </select>
+              </div>
+
+              <div>
+              <label htmlFor="year" className="block text-sm font-medium text-text mb-2">
+                  Year
+                </label>
+                <input
+                  id="year"
+                  type="number"
+                  value={year}
+                  onChange={(e) => setYear(Number(e.target.value))}
+                  className="input"
+                  min={2020}
+                  max={2100}
+                  required
+                />
+              </div>
+            </div>
 
           {error && (
             <div className="p-3 bg-error/10 border border-error/20 rounded-md">
               <p className="text-error text-sm">{error}</p>
-            </div>
+          </div>
           )}
 
           <div className="flex justify-end gap-3 pt-2">

@@ -84,8 +84,8 @@ export default function TeacherHomePage() {
               Create your first course to get started with organizing sections, rubrics, and assignments.
             </div>
             <button onClick={() => setIsDialogOpen(true)} className="btn btn-primary mt-4">
-              Create your first course
-            </button>
+            Create your first course
+          </button>
           </div>
         </div>
       ) : (

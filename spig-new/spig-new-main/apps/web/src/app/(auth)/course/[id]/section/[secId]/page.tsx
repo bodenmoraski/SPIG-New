@@ -132,7 +132,7 @@ export default function ManageSectionPage() {
   // Actions
   const handleSetAssignment = async (assignmentId: number) => {
     try {
-      const updated = await api.post(`/courses/${courseId}/sections/${sectionId}/assignment`, {
+      const updated = await api.post<Partial<Section>>(`/courses/${courseId}/sections/${sectionId}/assignment`, {
         assignmentId,
       });
       setSection((prev) => prev ? { ...prev, ...updated } : null);
@@ -150,7 +150,7 @@ export default function ManageSectionPage() {
     const nextStatus = STATUSES[currentIndex + 1];
 
     try {
-      const updated = await api.post(`/courses/${courseId}/sections/${sectionId}/status`, {
+      const updated = await api.post<Partial<Section>>(`/courses/${courseId}/sections/${sectionId}/status`, {
         status: nextStatus,
       });
       setSection((prev) => prev ? { ...prev, ...updated } : null);
@@ -168,7 +168,7 @@ export default function ManageSectionPage() {
     const prevStatus = STATUSES[currentIndex - 1];
 
     try {
-      const updated = await api.post(`/courses/${courseId}/sections/${sectionId}/status`, {
+      const updated = await api.post<Partial<Section>>(`/courses/${courseId}/sections/${sectionId}/status`, {
         status: prevStatus,
       });
       setSection((prev) => prev ? { ...prev, ...updated } : null);
@@ -179,7 +179,7 @@ export default function ManageSectionPage() {
 
   const handleEndActivity = async () => {
     try {
-      const updated = await api.delete(`/courses/${courseId}/sections/${sectionId}/assignment`);
+      const updated = await api.delete<Partial<Section>>(`/courses/${courseId}/sections/${sectionId}/assignment`);
       setSection((prev) => prev ? { ...prev, ...updated, assignment: null, assignmentId: null } : null);
       setSubmissionCount(0);
     } catch (err: any) {
@@ -199,7 +199,7 @@ export default function ManageSectionPage() {
 
   const handleToggleLink = async () => {
     try {
-      const updated = await api.put(`/courses/${courseId}/sections/${sectionId}/link`, {});
+      const updated = await api.put<Partial<Section>>(`/courses/${courseId}/sections/${sectionId}/link`, {});
       setSection((prev) => prev ? { ...prev, ...updated } : null);
     } catch (err: any) {
       alert(err.message || 'Failed to toggle link');
@@ -208,7 +208,7 @@ export default function ManageSectionPage() {
 
   const handleRegenerateLink = async () => {
     try {
-      const updated = await api.post(`/courses/${courseId}/sections/${sectionId}/link/regenerate`, {});
+      const updated = await api.post<Partial<Section>>(`/courses/${courseId}/sections/${sectionId}/link/regenerate`, {});
       setSection((prev) => prev ? { ...prev, ...updated } : null);
     } catch (err: any) {
       alert(err.message || 'Failed to regenerate link');
