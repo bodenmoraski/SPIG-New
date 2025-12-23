@@ -21,6 +21,14 @@ RUN pnpm install --frozen-lockfile
 COPY packages/shared-types ./packages/shared-types
 COPY apps/web ./apps/web
 
+# Accept build-time environment variables for Next.js
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+
+# Set environment variables for the build
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
+
 # Build Next.js app
 RUN pnpm --filter @spig/web build
 
