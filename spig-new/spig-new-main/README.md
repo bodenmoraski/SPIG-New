@@ -129,26 +129,53 @@ Railway is the easiest way to deploy SPIG. Follow these steps:
    - `NEXT_PUBLIC_API_URL` → Your API service's public URL (use `${{ Api.RAILWAY_PUBLIC_DOMAIN }}`)
 4. Generate a public domain in Railway settings
 
-### 5. Update API Environment Variables
-After web is deployed, update the API's `FRONTEND_URL` to your web service's public URL.
+### 5. Generate Public Domains
+1. For **Web Service**: 
+   - Go to your Web service settings
+   - Click "Settings" → "Networking"
+   - Click "Generate Domain" or "Add Domain"
+   - Railway will give you a URL like `your-web-service.up.railway.app`
+   - Copy this URL
 
-### 6. Update Google OAuth Settings
-In your Google Cloud Console, add these to authorized redirect URIs:
-- `https://your-api.railway.app/api/auth/google/callback`
+2. For **API Service**:
+   - Go to your API service settings  
+   - Click "Settings" → "Networking"
+   - Click "Generate Domain" or "Add Domain"
+   - Railway will give you a URL like `your-api-service.up.railway.app`
+   - Copy this URL
+
+### 6. Update Environment Variables
+After both services have domains, update environment variables:
+
+**API Service:**
+- `FRONTEND_URL` → Your web service URL (e.g., `https://your-web-service.up.railway.app`)
+- `BASE_URL` → Your API service URL (e.g., `https://your-api-service.up.railway.app`)
+
+**Web Service:**
+- `NEXT_PUBLIC_API_URL` → Your API service URL (e.g., `https://your-api-service.up.railway.app`)
+
+**Important**: Make sure to use `https://` in all URLs!
+
+### 7. Update Google OAuth Settings
+In your Google Cloud Console OAuth 2.0 Client settings:
+1. Go to "Authorized redirect URIs"
+2. Add: `https://your-api-service-url.up.railway.app/api/auth/google/callback`
+3. Replace `your-api-service-url` with your actual API service domain
+4. Save the changes
 
 ### Environment Variables Summary
 
 **API Service:**
-- `DATABASE_URL` (from PostgreSQL service)
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `JWT_SECRET` (random 32+ chars)
-- `FRONTEND_URL` (web service URL)
-- `BASE_URL` (API service URL)
-- `PORT` (optional, defaults to 3001)
+- `DATABASE_URL` → Use Railway's variable reference: `${{ Postgres.DATABASE_URL }}`
+- `GOOGLE_CLIENT_ID` → Your Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` → Your Google OAuth client secret  
+- `JWT_SECRET` → Generate a random 32+ character string (you can use: `openssl rand -hex 32`)
+- `FRONTEND_URL` → Your web service URL (e.g., `https://your-web-service.up.railway.app`)
+- `BASE_URL` → Your API service URL (e.g., `https://your-api-service.up.railway.app`)
+- `PORT` → Railway sets this automatically, but you can leave it or set to `3001`
 
 **Web Service:**
-- `NEXT_PUBLIC_API_URL` (API service URL)
+- `NEXT_PUBLIC_API_URL` → Your API service URL (e.g., `https://your-api-service.up.railway.app`)
 
 **Database:**
 - Railway auto-generates `DATABASE_URL`
