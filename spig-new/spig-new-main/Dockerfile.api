@@ -17,6 +17,9 @@ COPY apps/api/package.json ./apps/api/package.json
 # Install all dependencies (needed for building)
 RUN pnpm install --frozen-lockfile
 
+# Copy TypeScript config (needed for building shared-types)
+COPY tsconfig.base.json ./
+
 # Copy source code
 COPY packages/shared-types ./packages/shared-types
 COPY apps/api ./apps/api
